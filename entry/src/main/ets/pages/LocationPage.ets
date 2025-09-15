@@ -1,0 +1,104 @@
+import { geoLocationManager } from '@kit.LocationKit';
+import { BusinessError } from '@kit.BasicServicesKit'
+import { LocationModel } from '../model/LocationModel';
+import { ArcButton, ArcButtonOptions, ArcButtonPosition, ArcButtonStyleMode, promptAction } from '@kit.ArkUI';
+import { NavigationService } from '../services/NavigationService';
+
+try {
+  let locationEnabled = geoLocationManager.isLocationEnabled();
+} catch (err) {
+  console.error("errCode:" + err.code + ", message:" + err.message);
+}
+
+@Entry
+@Component
+export struct LocationPage {
+  @State currentLocation: LocationModel[] = [];
+  @State locations: LocationModel[] = [];
+  @State nameInput: string = "";
+
+  @State location: LocationModel = new LocationModel()
+
+  navigationService: NavigationService = NavigationService.getInstance();
+
+  async addCurrentLocation(): Promise<void> {
+    if (!this.nameInput.trim()) {
+      console.warn("Please enter a correct value!");
+      promptAction.showToast({ message: `Please enter a correct value!` });
+      return;
+    }
+
+    let request: geoLocationManager.SingleLocationRequest = {
+      'locatingPriority': geoLocationManager.LocatingPriority.PRIORITY_LOCATING_SPEED,
+      'locatingTimeoutMs': 10000
+    }
+
+    try {
+      await geoLocationManager.getCurrentLocation(request).then((result) => {
+        console.info('current location: ' + JSON.stringify(result));
+        promptAction.showToast({ message: `Current Loc Latitude: ${JSON.stringify(result.latitude)}` });
+
+        this.locations.push(new LocationModel(
+            this.nameInput,
+            result.latitude,
+            result.longitude
+          )
+        );
+        this.location = new LocationModel(this.nameInput, result.latitude, result.longitude)
+        AppStorage.setOrCreate('location', this.location);
+
+        this.nameInput = "";
+
+        console.log("Current locations list:");
+        this.locations.forEach((loc, index) => {
+          console.log(`${index + 1}. ${loc.name} -> Lat: ${loc.latitude}, Lng: ${loc.longitude}`);
+          promptAction.showToast({ message: `${this.nameInput} added!` });
+        });
+
+        this.navigationService.pageInfos.pushPath({ name: 'EventPage' })
+      }).catch((error: BusinessError) => {
+        console.error('getCurrentLocation error=' + JSON.stringify(error));
+        promptAction.showToast({ message: `${JSON.stringify(error)} error!` });
+      });
+    } catch (err) {
+      console.error("errCode:" + JSON.stringify(err));
+    }
+  }
+
+  build() {
+      Column() {
+        Image($r('app.media.back'))
+          .width(20)
+          .onClick(() => {
+            this.navigationService.pageInfos.pushPath({ name: 'EventPage' })
+          })
+          .margin({ top: 30})
+
+        Text("Set your current location!")
+          .fontSize(14)
+
+        TextInput({ placeholder: "Enter location name" })
+          .onChange(v => this.nameInput = v)
+          .width("90%")
+          .height(35)
+          .fontSize(14)
+          .placeholderFont({ size: 14 })
+
+        ArcButton({
+          options: new ArcButtonOptions({
+            label: 'OK',
+            position: ArcButtonPosition.BOTTOM_EDGE,
+            styleMode: ArcButtonStyleMode.EMPHASIZED_LIGHT,
+            onClick: () => {
+              this.addCurrentLocation()
+            }
+          })
+        })
+
+      }.width('100%')
+      .height('100%')
+      .backgroundColor(Color.Black)
+      .justifyContent(FlexAlign.SpaceBetween)
+  }
+}
+

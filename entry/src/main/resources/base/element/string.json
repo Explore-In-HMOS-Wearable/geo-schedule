@@ -1,0 +1,96 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "reason1",
+      "value": "read calendar"
+    },
+    {
+      "name": "reason2",
+      "value": "write calendar"
+    },
+    {
+      "name": "reason3",
+      "value": "Used to obtain location accurate to meters"
+    },
+    {
+      "name": "reason4",
+      "value": "Used to obtain location accurate to 5 kilometers"
+    },
+    {
+      "name": "create_event",
+      "value": "Used to create a new event"
+    },
+    {
+      "name": "update_event",
+      "value": "Used to update an existing event"
+    },
+    {
+      "name": "delete_event",
+      "value": "Used to delete an event"
+    },
+    {
+      "name": "list_events",
+      "value": "Used to list all created events"
+    },
+    {
+      "name": "choose_location",
+      "value": "Used to choose a location from the map"
+    },
+    {
+      "name": "create_location",
+      "value": "Used to create a new location with coordinates"
+    },
+    {
+      "name": "get_current_location",
+      "value": "Used to obtain the current device location"
+    },
+    {
+      "name": "attach_location",
+      "value": "Used to attach a location to an event"
+    },
+    {
+      "name": "create_event_toast",
+      "value": "Event created successfully"
+    },
+    {
+      "name": "update_event_toast",
+      "value": "Event updated"
+    },
+    {
+      "name": "delete_event_toast",
+      "value": "Event deleted"
+    },
+    {
+      "name": "list_events_toast",
+      "value": "Events loaded"
+    },
+    {
+      "name": "choose_location_toast",
+      "value": "Location selected"
+    },
+    {
+      "name": "create_location_toast",
+      "value": "Location saved successfully"
+    },
+    {
+      "name": "get_current_location_toast",
+      "value": "Current location obtained"
+    },
+    {
+      "name": "attach_location_toast",
+      "value": "Location attached to event"
+    }
+  ]
+}

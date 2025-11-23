@@ -1,4 +1,4 @@
-import { LocationModel } from "./LocationModel";
+import { LocationModel } from './LocationModel';
 
 export class EventModell {
   title: string = '';

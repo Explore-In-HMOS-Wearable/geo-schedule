@@ -1,7 +1,6 @@
 import {
   abilityAccessCtrl,
   AbilityConstant,
-  common,
   ConfigurationConstant,
   PermissionRequestResult,
   Permissions,
@@ -10,14 +9,9 @@ import {
 } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { calendarManager } from '@kit.CalendarKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
 const DOMAIN = 0x0000;
-
-export let calendarMgr: calendarManager.CalendarManager | null = null;
-
-export let mContext: common.UIAbilityContext | null = null;
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -41,14 +35,12 @@ export default class EntryAbility extends UIAbility {
       hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
     });
 
-    mContext = this.context;
     const permissions: Permissions[] =
       ['ohos.permission.READ_CALENDAR', 'ohos.permission.WRITE_CALENDAR', 'ohos.permission.LOCATION',
         'ohos.permission.APPROXIMATELY_LOCATION'];
     let atManager = abilityAccessCtrl.createAtManager();
-    atManager.requestPermissionsFromUser(mContext, permissions).then((result: PermissionRequestResult) => {
+    atManager.requestPermissionsFromUser(this.context, permissions).then((result: PermissionRequestResult) => {
       console.info(`get Permission success, result: ${JSON.stringify(result)}`);
-      calendarMgr = calendarManager.getCalendarManager(mContext);
     }).catch((error: BusinessError) => {
       console.error(`get Permission error, error. Code: ${error.code}, message: ${error.message}`);
     })

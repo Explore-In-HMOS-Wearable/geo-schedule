@@ -6,32 +6,6 @@ import { NavigationService } from '../services/NavigationService';
 @Component
 export struct MainPage {
   navigationService: NavigationService = NavigationService.getInstance();
-  @State events: EventModel[] = [
-    {
-      id: 1,
-      title: 'Team Meeting',
-      location: 'Office Room A',
-      startTime: '2025-09-01 14:00',
-      endTime: '2025-09-01 15:00',
-      reminder: '30 min before'
-    },
-    {
-      id: 2,
-      title: 'Dinner with Alex',
-      location: 'Italian Restaurant',
-      startTime: '2025-09-02 19:00',
-      endTime: '2025-09-02 21:00',
-      reminder: '1 hr before'
-    },
-    {
-      id: 3,
-      title: 'Morning Run',
-      location: 'City Park',
-      startTime: '2025-09-03 07:00',
-      endTime: '2025-09-03 08:00',
-      reminder: '10 min before'
-    }
-  ]
   @StorageLink('eventList') eventList: EventModell[] = [];
 
   onPageShow(): void {
@@ -89,11 +63,11 @@ export struct MainPage {
               .fontWeight(FontWeight.Bold)
               .fontColor(Color.Black)
 
-            Text('📍 ' + event.location?.name)
+            Text(`📍 ${event.location?.name}`)
               .fontSize(8)
               .fontColor(Color.Black)
 
-            Text('⏰ ' + this.formatDateTime(event.startTime) + ' – ' + this.formatDateTime(event.endTime))
+            Text(`⏰ ${this.formatDateTime(event.startTime)} - ${this.formatDateTime(event.endTime)}`)
               .fontSize(8)
               .fontColor(Color.Black)
 

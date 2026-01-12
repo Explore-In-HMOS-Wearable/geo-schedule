@@ -5,10 +5,13 @@
 GeoScheduleApp is a smart event management app built with ArkTS and ArkUI, optimized for HarmonyOS smart devices. It allows users to create events by capturing their current location, save them directly to the calendar, and view all created events in both a list and calendar view for easy organization.
 
 # Preview
+
+<div>
 <img src="./screenshots/output1.png" width="24%" />
 <img src="./screenshots/output2.png" width="24%" />
 <img src="./screenshots/output3.png" width="24%" />
 <img src="./screenshots/output4.png" width="24%" />
+</div>
 
 # Use Cases
 
@@ -41,7 +44,7 @@ GeoScheduleApp is a smart event management app built with ArkTS and ArkUI, optim
     
  ---
 
-# Project Directory
+# Directory Structure
 ```
 |---model
 |   |---EventModel.ets        # Data model representing a calendar event

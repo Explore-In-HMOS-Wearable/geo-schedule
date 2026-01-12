@@ -2,10 +2,11 @@ import { NavigationService } from '../services/NavigationService'
 import { ArcButton, ArcButtonOptions, ArcButtonPosition, ArcButtonStyleMode } from '@ohos.arkui.advanced.ArcButton'
 import { BusinessError } from '@kit.BasicServicesKit'
 import { calendarManager } from '@kit.CalendarKit'
-import { calendarMgr } from '../entryability/EntryAbility'
 import { EventModell } from '../model/EventModel'
 import { LocationModel } from '../model/LocationModel'
-import { promptAction } from '@kit.ArkUI'
+import { PromptAction  } from '@kit.ArkUI'
+
+let calendarMgr: calendarManager.CalendarManager | null = null;
 
 @Entry
 @Component
@@ -13,16 +14,16 @@ export struct NewEventPage {
   @State title: string = ''
   @State startTime: number = 0
   @State endTime: number = 0
-  @State location: string = ''
-  @State showDatePicker: boolean = false
-  @State showTimePicker: boolean = false
-  @State event: string = ''
   @State eventList: EventModell[] = []
   @StorageLink('location') currentLocation: LocationModel = new LocationModel();
   navigationService: NavigationService = NavigationService.getInstance();
 
+  private uiContext: UIContext = this.getUIContext()
+  private promptAction: PromptAction = this.uiContext.getPromptAction()
+
   aboutToAppear(): void {
     console.info(`Succeeded in adding event, id -> ${this.currentLocation.name}`);
+    calendarMgr = calendarManager.getCalendarManager(this.getUIContext().getHostContext());
   }
 
   createEvent(): void {
@@ -74,7 +75,7 @@ export struct NewEventPage {
         this.eventList.push(new EventModell(this.title, this.startTime, this.endTime, 'Reminder', this.currentLocation))
         AppStorage.setOrCreate('eventList', this.eventList);
         console.info(`Succeeded in adding event, id2 -> ${this.eventList[0].title}`);
-        promptAction.showToast({ message: `Event created!` });
+        this.promptAction.showToast({ message: `Event created!` });
         this.navigationService.pageInfos.pushPath({ name: 'MainPage' })
 
       }).catch((err: BusinessError) => {
@@ -120,12 +121,12 @@ export struct NewEventPage {
           onClick: () => {
             if (!this.title.trim()) {
               console.warn('Please enter a correct value!');
-              promptAction.showToast({ message: `Please enter a correct value!` });
+              this.promptAction.showToast({ message: `Please enter a correct value!` });
               return;
             }
             if (this.currentLocation.name === '') {
               console.warn('Please select your location!');
-              promptAction.showToast({ message: `Please select your location!` });
+              this.promptAction.showToast({ message: `Please select your location!` });
               return;
             }
             this.createEvent()

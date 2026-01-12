@@ -16,7 +16,7 @@ export struct CalendarPage {
   @State now: number = Date.now();
   @State eventList: EventModell[] = [
     new EventModell('Team Meeting', this.now, this.now + 60 * 60 * 1000, '10 minutes before',
-      new LocationModel('Office', 40.978, 29.092)),
+      new LocationModel('Office', 40.978, 29.092))
   ];
 
   getDaysInMonth(year: number, month: number): number[] {
@@ -29,18 +29,19 @@ export struct CalendarPage {
     return result;
   }
 
-  hasEvent(day: number, year: number, month: number): boolean {
-    let dayStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-    return this.eventList.some(event => this.formatDate(event.startTime) === dayStr)
+  private readonly DAY_MS = 24 * 60 * 60 * 1000
+
+  private toDayNumber(time: number): number {
+    return Math.floor(time / this.DAY_MS)
   }
 
-  // Timestamp → YYYY-MM-DD
-  formatDate(time: number): string {
-    let start = new Date(time)
-    let year = start.getFullYear()
-    let month = String(start.getMonth() + 1).padStart(2, '0')
-    let day = String(start.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
+  hasEvent(day: number, year: number, month: number): boolean {
+    const target = Math.floor(
+      new Date(year, month - 1, day).getTime() / this.DAY_MS
+    )
+    return this.eventList.some(
+      event => this.toDayNumber(event.startTime) === target
+    )
   }
 
   @State currentYear: number = 0
@@ -78,9 +79,11 @@ export struct CalendarPage {
                   .height(10)
               }
             }
-            .padding({top: 2, bottom: 6, left:2})
+            .padding({ top: 2, bottom: 6, left: 2 })
           }
-        })
+        },
+          (item: number) => item.toString()
+        )
       }
       .scrollBar(BarState.Off)
       .columnsTemplate('1fr 1fr 1fr 1fr 1fr 1fr 1fr')

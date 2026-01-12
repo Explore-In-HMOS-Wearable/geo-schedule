@@ -1,5 +1,4 @@
 import { calendarManager } from '@kit.CalendarKit';
-import { calendarMgr } from '../entryability/EntryAbility';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { NewEventPage } from './EventPage';
 import { LocationPage } from './LocationPage';
@@ -7,14 +6,14 @@ import { NavigationService } from '../services/NavigationService';
 import { MainPage } from './MainPage';
 import { CalendarPage } from './CalendarPage';
 
+let calendarMgr: calendarManager.CalendarManager | null = null;
 
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
 
   aboutToAppear(): void {
-
+    calendarMgr = calendarManager.getCalendarManager(this.getUIContext().getHostContext());
     let eventId: number | undefined = undefined;
     const date = new Date();
     const event: calendarManager.Event = {

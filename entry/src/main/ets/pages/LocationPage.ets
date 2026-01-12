@@ -1,7 +1,7 @@
 import { geoLocationManager } from '@kit.LocationKit';
 import { BusinessError } from '@kit.BasicServicesKit'
 import { LocationModel } from '../model/LocationModel';
-import { ArcButton, ArcButtonOptions, ArcButtonPosition, ArcButtonStyleMode, promptAction } from '@kit.ArkUI';
+import { ArcButton, ArcButtonOptions, ArcButtonPosition, ArcButtonStyleMode, PromptAction } from '@kit.ArkUI';
 import { NavigationService } from '../services/NavigationService';
 
 try {
@@ -13,7 +13,6 @@ try {
 @Entry
 @Component
 export struct LocationPage {
-  @State currentLocation: LocationModel[] = [];
   @State locations: LocationModel[] = [];
   @State nameInput: string = '';
 
@@ -21,10 +20,13 @@ export struct LocationPage {
 
   navigationService: NavigationService = NavigationService.getInstance();
 
+  private uiContext: UIContext = this.getUIContext()
+  private promptAction: PromptAction = this.uiContext.getPromptAction()
+
   async addCurrentLocation(): Promise<void> {
     if (!this.nameInput.trim()) {
       console.warn('Please enter a correct value!');
-      promptAction.showToast({ message: `Please enter a correct value!` });
+      this.promptAction.showToast({ message: `Please enter a correct value!` });
       return;
     }
 
@@ -36,7 +38,7 @@ export struct LocationPage {
     try {
       await geoLocationManager.getCurrentLocation(request).then((result) => {
         console.info(`Current location: ${JSON.stringify(result)}`);
-        promptAction.showToast({ message: `Current Loc Latitude: ${JSON.stringify(result.latitude)}` });
+        this.promptAction.showToast({ message: `Current Loc Latitude: ${JSON.stringify(result.latitude)}` });
 
         this.locations.push(new LocationModel(
           this.nameInput,
@@ -52,13 +54,13 @@ export struct LocationPage {
         console.info('Current locations list:');
         this.locations.forEach((loc, index) => {
           console.info(`${index + 1}. ${loc.name} -> Lat: ${loc.latitude}, Lng: ${loc.longitude}`);
-          promptAction.showToast({ message: `${this.nameInput} added!` });
+          this.promptAction.showToast({ message: `${this.nameInput} added!` });
         });
 
         this.navigationService.pageInfos.pushPath({ name: 'EventPage' })
       }).catch((error: BusinessError) => {
         console.error(`getCurrentLocation error = ${JSON.stringify(error)}`);
-        promptAction.showToast({ message: `${JSON.stringify(error)} error!` });
+        this.promptAction.showToast({ message: `${JSON.stringify(error)} error!` });
       });
     } catch (err) {
       console.error(`errCode: ${JSON.stringify(err)}`);
